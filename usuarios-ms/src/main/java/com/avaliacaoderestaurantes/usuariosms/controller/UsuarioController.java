@@ -1,12 +1,7 @@
 package com.avaliacaoderestaurantes.usuariosms.controller;
 
 import com.avaliacaoderestaurantes.usuariosms.model.Usuario;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +23,26 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public Usuario getUsuarioPeloId(@PathVariable Long id){
+        return new Usuario(id, "Maria");
+    }
+
+    @PostMapping
+    public Usuario inserirUsuario(@RequestBody Usuario usuario){
+        return usuario;
+    }
+
+    @PutMapping("/{id}")
+    public Usuario atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario){
+        return usuario;
+    }
+
+    @PatchMapping("/{id}/{nomeAtributo}")
+    public Usuario atualizarRestaurante(@PathVariable Long id, @PathVariable String nomeAtributo, @RequestBody Usuario usuario){
+        return usuario;
+    }
+
+    @DeleteMapping("/{id}")
+    public Usuario deletarRestaurante(@PathVariable Long id) {
         return new Usuario(id, "Maria");
     }
 

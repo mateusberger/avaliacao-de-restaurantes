@@ -1,10 +1,7 @@
 package com.avaliacaoderestaurantes.restaurantesms.controller;
 
 import com.avaliacaoderestaurantes.restaurantesms.model.Restaurante;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -31,4 +28,23 @@ public class RestauranteController {
         return new Restaurante(id, "Coqueiro");
     }
 
+    @PostMapping
+    public Restaurante inserirRestaurante(@RequestBody Restaurante restaurante){
+        return restaurante;
+    }
+
+    @PutMapping("/{id}")
+    public Restaurante atualizarRestaurante(@PathVariable Long id, @RequestBody Restaurante restaurante){
+        return restaurante;
+    }
+
+    @PatchMapping("/{id}/{nomeAtributo}")
+    public Restaurante atualizarRestaurante(@PathVariable Long id, @PathVariable String nomeAtributo, @RequestBody Restaurante restaurante){
+        return restaurante;
+    }
+
+    @DeleteMapping("/{id}")
+    public Restaurante deletarRestaurante(@PathVariable Long id) {
+        return new Restaurante(id, "Coqueiro");
+    }
 }
