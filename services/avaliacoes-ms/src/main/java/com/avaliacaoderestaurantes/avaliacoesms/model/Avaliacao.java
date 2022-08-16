@@ -10,10 +10,6 @@ public class Avaliacao {
 
     private Long idRestaurante;
 
-    private Restaurante restaurante;
-
-    private Usuario usuario;
-
     public Avaliacao() {
     }
 
@@ -22,22 +18,6 @@ public class Avaliacao {
         this.nota = nota;
         this.idUsuario = idUsuario;
         this.idRestaurante = idRestaurante;
-    }
-
-    public Restaurante getRestaurante() {
-        return restaurante;
-    }
-
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     public Long getId() {

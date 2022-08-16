@@ -4,9 +4,11 @@ import com.avaliacaoderestaurantes.usuariosms.service.UsuarioService;
 import com.avaliacaoderestaurantes.usuariosms.service.UsuarioService.UsuarioDto;
 import com.avaliacaoderestaurantes.usuariosms.service.UsuarioService.UsuarioFiltro;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
@@ -16,10 +18,11 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public UsuarioFiltro listarUsuarios(
-        @RequestBody UsuarioFiltro filtro
+    public Page<UsuarioDto> listarUsuarios(
+        @RequestParam Integer pagina,
+        @RequestParam Integer itensPorPagina
     ){
-        return filtro;
+        return usuarioService.listarUsuarios(new UsuarioFiltro(pagina, itensPorPagina));
     }
 
     @GetMapping("/{id}")
@@ -53,7 +56,7 @@ public class UsuarioController {
 //    }
 
     @DeleteMapping("/{id}")
-    public UsuarioDto deletarRestaurante(
+    public UsuarioDto deletarUsuario(
             @PathVariable Long id
     ) {
         return usuarioService.deletarUsuario(id);

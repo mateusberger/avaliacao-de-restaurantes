@@ -1,17 +1,25 @@
 package com.avaliacaoderestaurantes.usuariosms.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.time.LocalDate;
+
+@Entity
 public class Usuario {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
 
-    public Usuario() {
-    }
+    private String email;
 
-    public Usuario(Long id, String nome) {
-        this.id = id;
-        this.nome = nome;
+    private LocalDate nascimento;
+
+    public Usuario() {
     }
 
     public Long getId() {
@@ -30,4 +38,19 @@ public class Usuario {
         this.nome = nome;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public LocalDate getNascimento() {
+        return nascimento;
+    }
+
+    public void setNascimento(LocalDate nascimento) {
+        this.nascimento = nascimento;
+    }
 }

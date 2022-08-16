@@ -1,5 +1,12 @@
 package com.avaliacaoderestaurantes.usuariosms.service;
 
+import com.avaliacaoderestaurantes.usuariosms.exception.UsuarioNaoEncontradoException;
+import com.avaliacaoderestaurantes.usuariosms.model.Usuario;
+import com.avaliacaoderestaurantes.usuariosms.repository.UsuarioRepository;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -7,35 +14,96 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
 
-    public List<UsuarioDto> listarUsuarios(UsuarioFiltro filtro){
+    private final UsuarioRepository repository;
+
+    @Autowired
+    public UsuarioService(UsuarioRepository repository) {
+        this.repository = repository;
+    }
+
+    public Page<UsuarioDto> listarUsuarios(
+            UsuarioFiltro filtro
+    ) {
+
+        Pageable pageable = Pageable.ofSize(filtro.itensPorPagina).withPage(filtro.paginaAtual);
+
+        return (repository.findAll(pageable)).map(usuario -> UsuarioDto.fromUsuario(usuario));
+    }
+
+    public UsuarioDto getUsuarioPorId(
+            Long id
+    ) {
+        Optional<Usuario> usuario = repository.findById(id);
+        if (usuario.isPresent()) return UsuarioDto.fromUsuario(usuario.get());
         return null;
     }
 
-    public UsuarioDto getUsuarioPorId(Long id){
-        return null;
+    public UsuarioDto criarNovoUsuario(
+            @Valid NovoUsuarioForm form
+    ) {
+        Usuario usuarioSalvo = repository.save(NovoUsuarioForm.toUsuario(form));
+        return UsuarioDto.fromUsuario(usuarioSalvo);
     }
 
-    public UsuarioDto criarNovoUsuario(@Valid NovoUsuarioForm form){
-        return null;
+    public UsuarioDto deletarUsuario(
+            Long id
+    ) {
+        Optional<Usuario> aDeletar = repository.findById(id);
+
+        if (aDeletar.isEmpty()){
+            throw new UsuarioNaoEncontradoException();
+        }
+
+        UsuarioDto deletado = UsuarioDto.fromUsuario(aDeletar.get());
+
+        repository.delete(aDeletar.get());
+
+        return deletado;
     }
 
-    public UsuarioDto deletarUsuario(Long id){
-        return null;
-    }
+//--------------------dtos---------------------
 
-
+    @Schema(name = "Formulário de cadastro de Usuário")
     public record NovoUsuarioForm(
             @NotBlank @NotNull String nome,
             @NotBlank @NotNull @Email String email,
             @NotNull LocalDate nascimento
-            ){}
+    ) {
 
-    public record UsuarioDto(Long id, String nome){}
+        public static Usuario toUsuario(NovoUsuarioForm novoUsuarioForm){
+            Usuario usuario = new Usuario();
+            usuario.setNome(novoUsuarioForm.nome());
+            usuario.setEmail(novoUsuarioForm.email());
+            usuario.setNascimento(novoUsuarioForm.nascimento());
+            return usuario;
+        }
 
-    public record UsuarioFiltro(Long paginaAtual, Long itensPorPagina, String nome){}
+    }
+
+    @Schema(name = "Usuário")
+    public record UsuarioDto(
+            Long id,
+            String nome,
+            String email,
+            LocalDate nascimento
+    ) {
+
+        public static UsuarioDto fromUsuario(Usuario usuario){
+            return new UsuarioDto(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getNascimento());
+        }
+
+    }
+
+    @Schema(name = "Esquema de busca e paginação")
+    public record UsuarioFiltro(
+            Integer paginaAtual,
+            Integer itensPorPagina
+    ) {
+    }
+
 }
