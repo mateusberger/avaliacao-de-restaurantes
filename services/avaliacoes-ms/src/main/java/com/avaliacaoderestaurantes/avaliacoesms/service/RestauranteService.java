@@ -29,7 +29,7 @@ public class RestauranteService {
         return restauranteResponse.getBody();
     }
 
-    public RestauranteDto fallBackGetRestaurante(Long restauranteId){
+    public RestauranteDto fallBackGetRestaurante(Long restauranteId, Throwable t){
         return new RestauranteService.RestauranteDto(restauranteId, "...");
     }
 

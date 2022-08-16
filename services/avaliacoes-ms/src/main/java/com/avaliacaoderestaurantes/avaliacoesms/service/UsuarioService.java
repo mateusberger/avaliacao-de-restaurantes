@@ -29,7 +29,7 @@ public class UsuarioService {
         return usuarioResponse.getBody();
     }
 
-    public UsuarioDto fallBackGetUsuario(Long usuarioId){
+    public UsuarioDto fallBackGetUsuario(Long usuarioId, Throwable t){
         return new UsuarioDto(usuarioId, "...");
     }
 
