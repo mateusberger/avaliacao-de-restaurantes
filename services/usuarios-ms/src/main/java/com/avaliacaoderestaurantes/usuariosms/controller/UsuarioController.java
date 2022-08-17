@@ -2,9 +2,10 @@ package com.avaliacaoderestaurantes.usuariosms.controller;
 
 import com.avaliacaoderestaurantes.usuariosms.service.UsuarioService;
 import com.avaliacaoderestaurantes.usuariosms.service.UsuarioService.UsuarioDto;
-import com.avaliacaoderestaurantes.usuariosms.service.UsuarioService.UsuarioFiltro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,10 +20,9 @@ public class UsuarioController {
 
     @GetMapping
     public Page<UsuarioDto> listarUsuarios(
-        @RequestParam Integer pagina,
-        @RequestParam Integer itensPorPagina
+        @PageableDefault(page = 0, size = 10) Pageable paginacao
     ){
-        return usuarioService.listarUsuarios(new UsuarioFiltro(pagina, itensPorPagina));
+        return usuarioService.listarUsuarios(paginacao);
     }
 
     @GetMapping("/{id}")

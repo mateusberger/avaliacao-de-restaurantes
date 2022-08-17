@@ -27,12 +27,10 @@ public class UsuarioService {
     }
 
     public Page<UsuarioDto> listarUsuarios(
-            UsuarioFiltro filtro
+            Pageable paginacao
     ) {
 
-        Pageable pageable = Pageable.ofSize(filtro.itensPorPagina).withPage(filtro.paginaAtual);
-
-        return (repository.findAll(pageable)).map(usuario -> UsuarioDto.fromUsuario(usuario));
+        return (repository.findAll(paginacao)).map(usuario -> UsuarioDto.fromUsuario(usuario));
     }
 
     public UsuarioDto getUsuarioPorId(
@@ -97,13 +95,6 @@ public class UsuarioService {
             return new UsuarioDto(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getNascimento());
         }
 
-    }
-
-    @Schema(name = "Esquema de busca e paginação")
-    public record UsuarioFiltro(
-            Integer paginaAtual,
-            Integer itensPorPagina
-    ) {
     }
 
 }
