@@ -37,8 +37,10 @@ public class UsuarioService {
             Long id
     ) {
         Optional<Usuario> usuario = repository.findById(id);
-        if (usuario.isPresent()) return UsuarioDto.fromUsuario(usuario.get());
-        return null;
+        if (usuario.isEmpty()) {
+            throw new UsuarioNaoEncontradoException();
+        }
+        return UsuarioDto.fromUsuario(usuario.get());
     }
 
     public UsuarioDto criarNovoUsuario(
