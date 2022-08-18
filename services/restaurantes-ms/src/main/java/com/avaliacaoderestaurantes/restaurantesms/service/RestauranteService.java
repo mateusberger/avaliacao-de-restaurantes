@@ -31,8 +31,10 @@ public class RestauranteService {
     
     public RestauranteDto getRestaurantePorId(Long idRestaurante){
         Optional<Restaurante> restaurante = repository.findById(idRestaurante);
-        if(restaurante.isPresent()) return RestauranteDto.fromRestaurante(restaurante.get());
-        return null;
+        if (restaurante.isEmpty()) {
+            throw new RestauranteNaoEncontradoException();
+        }
+        return RestauranteDto.fromRestaurante(restaurante.get());
     }
     
     public RestauranteDto criarNovoRestaurante(
@@ -59,7 +61,7 @@ public class RestauranteService {
     }
 
     //--------------------dtos---------------------
-    public static record NovoRestauranteForm(String nome) {
+    public record NovoRestauranteForm(String nome) {
 
         public static Restaurante toRestaurante(NovoRestauranteForm form) {
             Restaurante restaurante = new Restaurante();
@@ -68,7 +70,7 @@ public class RestauranteService {
         }
     }
 
-    public static record RestauranteDto(Long id, String nome) {
+    public record RestauranteDto(Long id, String nome) {
 
         public static RestauranteDto fromRestaurante(Restaurante restaurante) {
             return new RestauranteDto(restaurante.getId(), restaurante.getNome());
