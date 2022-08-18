@@ -1,50 +1,43 @@
 package com.avaliacaoderestaurantes.restaurantesms.controller;
 
-import com.avaliacaoderestaurantes.restaurantesms.model.Restaurante;
+import com.avaliacaoderestaurantes.restaurantesms.service.RestauranteService;
+import com.avaliacaoderestaurantes.restaurantesms.service.RestauranteService.NovoRestauranteForm;
+import com.avaliacaoderestaurantes.restaurantesms.service.RestauranteService.RestauranteDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/restaurante")
 public class RestauranteController {
 
+    @Autowired
+    private RestauranteService restauranteService;
+    
     @GetMapping
-    public List<Restaurante> listarRestaurantes(){
-        return Arrays.asList(
-                new Restaurante(1L, "Pé de Fava"),
-                new Restaurante(2L, "Desejo e Requinte"),
-                new Restaurante(3L, "Versatil"),
-                new Restaurante(4L, "Versatto"),
-                new Restaurante(5L, "Caravela")
-        );
+    public Page<RestauranteDto> listarRestaurantes(
+            @RequestParam(defaultValue = "0") Integer pagina,
+            @RequestParam(defaultValue = "20") Integer tamanhoPagina
+    ) {
+        Pageable paginacao = PageRequest.of(pagina, tamanhoPagina);
+        return restauranteService.listarRestaurantes(paginacao);
     }
 
     @GetMapping("/{id}")
-    public Restaurante getRestaurantePeloId(@PathVariable Long id){
-        return new Restaurante(id, "Coqueiro");
+    public RestauranteDto getRestaurantePeloId(@PathVariable Long id) {
+        return restauranteService.getRestaurantePorId(id);
     }
 
     @PostMapping
-    public Restaurante inserirRestaurante(@RequestBody Restaurante restaurante){
-        return restaurante;
-    }
-
-    @PutMapping("/{id}")
-    public Restaurante atualizarRestaurante(@PathVariable Long id, @RequestBody Restaurante restaurante){
-        return restaurante;
-    }
-
-    @PatchMapping("/{id}/{nomeAtributo}")
-    public Restaurante atualizarRestaurante(@PathVariable Long id, @PathVariable String nomeAtributo, @RequestBody Restaurante restaurante){
-        return restaurante;
+    public RestauranteDto inserirRestaurante(@RequestBody NovoRestauranteForm restauranteForm) {
+        return restauranteService.criarNovoRestaurante(restauranteForm);
     }
 
     @DeleteMapping("/{id}")
-    public Restaurante deletarRestaurante(@PathVariable Long id) {
-        return new Restaurante(id, "Coqueiro");
+    public RestauranteDto deletarRestaurante(@PathVariable Long id) {
+        return restauranteService.deletarRestaurante(id);
     }
 }
