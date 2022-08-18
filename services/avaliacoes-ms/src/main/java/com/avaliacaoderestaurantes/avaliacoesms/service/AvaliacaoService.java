@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.avaliacaoderestaurantes.avaliacoesms.service.UsuarioService.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AvaliacaoService {
@@ -28,23 +28,23 @@ public class AvaliacaoService {
             new Avaliacao(5L, 1, 5L, 1L)
     );
 
-    public List<AvaliacaoDto> listarAvaliacoes(){
+    public List<AvaliacaoDto> listarAvaliacoes() {
         return avaliacoes.stream()
                 .map(avaliacao -> {
                     RestauranteDto restaurante = restauranteService.getRestaurante(avaliacao.getIdRestaurante());
                     UsuarioDto usuario = usuarioService.getUsuario(avaliacao.getIdUsuario());
                     return AvaliacaoDto.avaliacaoDtoFrom(avaliacao, usuario, restaurante);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
-    public record AvaliacaoDto(Long id, Integer nota, UsuarioDto usuario, RestauranteDto restaurante){
+    public record AvaliacaoDto(Long id, Integer nota, UsuarioDto usuario, RestauranteDto restaurante) {
 
         public static AvaliacaoDto avaliacaoDtoFrom(
                 Avaliacao avaliacao,
                 UsuarioDto usuarioDto,
                 RestauranteDto restauranteDto
-        ){
+        ) {
             return new AvaliacaoDto(avaliacao.getId(), avaliacao.getNota(), usuarioDto, restauranteDto);
         }
     }
