@@ -1,0 +1,7 @@
+FROM openjdk:17
+WORKDIR /springbootadmin
+ARG PORT_BUILD
+ENV PORT_BUILD=${PORT_BUILD}
+EXPOSE ${PORT_BUILD}
+COPY /target/springboot-admin-0.0.1-SNAPSHOT.jar .
+ENTRYPOINT [ "java", "-jar", "springboot-admin-0.0.1-SNAPSHOT.jar" , "--server.port=8877"]
