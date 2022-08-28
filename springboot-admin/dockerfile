@@ -1,7 +1,14 @@
 FROM openjdk:17
+
 WORKDIR /springbootadmin
-ARG PORT_BUILD
-ENV PORT_BUILD=${PORT_BUILD}
+
+ARG PORT_BUILD=8171
+
+ENV PORT=${PORT_BUILD}, \
+    CONFIG_SERVER_URL="http://configservice:8888"
+
 EXPOSE ${PORT_BUILD}
+
 COPY /target/springboot-admin-0.0.1-SNAPSHOT.jar .
-ENTRYPOINT [ "java", "-jar", "springboot-admin-0.0.1-SNAPSHOT.jar" , "--server.port=8877"]
+
+CMD [ "java", "-jar", "springboot-admin-0.0.1-SNAPSHOT.jar" , "--server.port="${PORT}, "-DCONFIG_SERVER_URL="${CONFIG_SERVER_URL}]

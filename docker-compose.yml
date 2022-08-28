@@ -1,0 +1,71 @@
+version: "3.9"
+
+networks:
+  bridge-avaliacaoderestaurantes:
+    driver: bridge
+
+
+services:
+
+  configservice:
+    build: ./config-server/dockerfile
+    ports:
+      - "8888:8888"
+    container_name: configservice
+    networks:
+      - bridge-avaliacaoderestaurantes
+  
+  servicediscovery:
+    build: ./servicediscovery
+    depends_on:
+      - configservice
+    ports:
+      - "8762:8762"
+    container_name: servicediscovery
+    networks:
+      - bridge-avaliacaoderestaurantes
+    
+  apigateway:
+    build: ./apigateway
+    depends_on:
+      - servicediscovery
+    ports:
+      - "8181:8181"
+    container_name: apigateway
+    networks:
+      - bridge-avaliacaoderestaurantes
+  
+  springboot-admin:
+    build: ./springboot-admin
+    depends_on:
+      - servicediscovery
+    ports:
+      - "8171:8171"
+    container_name: springboot-admin
+    networks:
+      - bridge-avaliacaoderestaurantes
+
+
+  restaurantes-ms:
+    build: ./services/restaurantes-ms
+    depends_on:
+      - servicediscovery
+    container_name: restaurantes-ms
+    networks:
+      - bridge-avaliacaoderestaurantes
+  
+  usuarios-ms:
+    build: ./services/usuarios-ms
+    depends_on:
+      - servicediscovery
+    container_name: usuarios-ms
+    networks:
+      - bridge-avaliacaoderestaurantes
+  
+  avaliacoes-ms:
+    build: ./services/avaliacoes-ms
+    depends_on:
+      - servicediscovery
+    container_name: avaliacoes-ms
+    networks:
+      - bridge-avaliacaoderestaurantes
