@@ -32,4 +32,5 @@ A Arquitetura da aplicação conta com um gateway para centralizar as chamadas e
 Para compilar e rodar o projeto, será necessário algumas dependecias/requisitos:
 - Java 17
 - Apache Maven
+- Docker e Docker Composer
 
