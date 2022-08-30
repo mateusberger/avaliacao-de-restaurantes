@@ -19,15 +19,15 @@
         <spring-cloud.version>2021.0.3</spring-cloud.version>
     </properties>
     <dependencies>
-            
-                    
+
+
         <!-- Configurações -->
-        
+
         <dependency> <!-- Busca de configurações centralizadas -->
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
-        
+
         <dependency> <!-- Busca de configurações centralizadas -->
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-config</artifactId>

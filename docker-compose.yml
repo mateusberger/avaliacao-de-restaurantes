@@ -8,7 +8,7 @@ networks:
 services:
 
   configservice:
-    build: ./config-server/dockerfile
+    build: ./config-server
     ports:
       - "8888:8888"
     container_name: configservice
