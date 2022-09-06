@@ -1,71 +1,102 @@
-version: "3.9"
+version: "2.1"
 
 networks:
   bridge-avaliacaoderestaurantes:
     driver: bridge
-
 
 services:
 
   configservice:
     build: ./config-server
     ports:
-      - "8888:8888"
+      - 8888:8888
     container_name: configservice
+    environment:
+      - URI_CONFIG_REPOSITORIO=https://github.com/mateusberger/avaliacao-de-restaurantes-configs.git
+      - PROFILE=default
     networks:
       - bridge-avaliacaoderestaurantes
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://configservice:8888/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 60
   
   servicediscovery:
     build: ./servicediscovery
     depends_on:
-      - configservice
+      configservice:
+        condition: service_healthy
     ports:
-      - "8762:8762"
+      - 8762:8762
     container_name: servicediscovery
+    environment:
+      - CONFIG_SERVER=http://configservice:8888
+      - PROFILE=default
     networks:
       - bridge-avaliacaoderestaurantes
-    
+  
   apigateway:
     build: ./apigateway
     depends_on:
-      - servicediscovery
+      configservice:
+        condition: service_healthy
     ports:
-      - "8181:8181"
+      - 8181:8181
     container_name: apigateway
+    environment:
+      - CONFIG_SERVER=http://configservice:8888
+      - PROFILE=default
     networks:
       - bridge-avaliacaoderestaurantes
   
   springboot-admin:
     build: ./springboot-admin
     depends_on:
-      - servicediscovery
+      configservice:
+        condition: service_healthy
     ports:
-      - "8171:8171"
+      - 8171:8171
     container_name: springboot-admin
+    environment:
+      - CONFIG_SERVER=http://configservice:8888
+      - PROFILE=default
     networks:
       - bridge-avaliacaoderestaurantes
-
-
+  
+  
   restaurantes-ms:
     build: ./services/restaurantes-ms
     depends_on:
-      - servicediscovery
+      configservice:
+        condition: service_healthy
     container_name: restaurantes-ms
+    environment:
+      - CONFIG_SERVER=http://configservice:8888
+      - PROFILE=default
     networks:
       - bridge-avaliacaoderestaurantes
   
   usuarios-ms:
     build: ./services/usuarios-ms
     depends_on:
-      - servicediscovery
+      configservice:
+        condition: service_healthy
     container_name: usuarios-ms
+    environment:
+      - CONFIG_SERVER=http://configservice:8888
+      - PROFILE=default
     networks:
       - bridge-avaliacaoderestaurantes
   
   avaliacoes-ms:
     build: ./services/avaliacoes-ms
     depends_on:
-      - servicediscovery
+      configservice:
+        condition: service_healthy
     container_name: avaliacoes-ms
+    environment:
+      - CONFIG_SERVER=http://configservice:8888
+      - PROFILE=default
     networks:
       - bridge-avaliacaoderestaurantes
